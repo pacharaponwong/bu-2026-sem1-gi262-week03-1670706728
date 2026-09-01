@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Solution
@@ -14,14 +15,18 @@ namespace Solution
 
         public OOPMapGenerator mapGenerator;
 
+
         public void PrintInfo()
         {
-            Debug.Log("tell me your " + Name);
+            Debug.Log("tell me your" + Name);
         }
-
         public virtual void Hit()
         {
-
+            Debug.Log("Hit");
         }
+
+
+
+
     }
 }

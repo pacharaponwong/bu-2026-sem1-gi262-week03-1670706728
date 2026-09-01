@@ -22,10 +22,6 @@ namespace Solution
         {
             Vector2 direction = moveAction.ReadValue<Vector2>();
             
-            // if we call Move() here, it will be called every frame, 
-            // which is not what we want. We want to call Move() only when the moveAction is triggered.
-            // Move(direction); 
-            
             if (moveAction.triggered)
             {
                 Move(direction);

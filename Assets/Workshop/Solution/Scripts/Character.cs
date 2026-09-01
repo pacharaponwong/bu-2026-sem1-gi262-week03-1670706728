@@ -25,53 +25,45 @@ namespace Solution
 
         public virtual void Move(Vector2 direction)
         {
-            if (isFreeze == true)
-            {
-                GetComponent<SpriteRenderer>().color = Color.white;
-                isFreeze = false;
-                return;
-            }
             int toX = (int)(positionX + direction.x);
             int toY = (int)(positionY + direction.y);
-
             if (HasPlacement(toX, toY))
             {
-                if (IsDemonWalls(toX, toY))
+                if (IsPotion(toX, toY))
+                {
+                    mapGenerator.potions[toX, toY].Hit();
+                    mapGenerator.mapdata[positionX, positionY] = mapGenerator.empty;
+                    positionX = toX;
+                    positionY = toY;
+                    transform.position = new Vector2(positionX, positionY);
+                }
+                else if (IsDemonWalls(toX, toY))
                 {
                     mapGenerator.walls[toX, toY].Hit();
                 }
-                else if (IsPotion(toX, toY))
-                {
-                    mapGenerator.potions[toX, toY].Hit();
-                    positionX = toX;
-                    positionY = toY;
-                    transform.position = new Vector3(positionX, positionY, 0);
-                }
-                else if (IsPotionBonus(toX, toY))
-                {
-                    mapGenerator.potions[toX, toY].Hit();
-                    positionX = toX;
-                    positionY = toY;
-                    transform.position = new Vector3(positionX, positionY, 0);
-                }
+                // เพิ่มเงื่อนไข IsExit ตรงนี้
                 else if (IsExit(toX, toY))
                 {
+                    // เรียกเมธอด Hit() ของ Exit เพื่อแสดงผล YouWin
                     mapGenerator.Exit.Hit();
+
+                    // อัปเดตตำแหน่งเพื่อให้ผู้เล่นเดินไปทับช่อง Exit ได้ (ไม่บังคับ)
+                    mapGenerator.mapdata[positionX, positionY] = mapGenerator.empty;
                     positionX = toX;
                     positionY = toY;
-                    transform.position = new Vector3(positionX, positionY, 0);
+                    transform.position = new Vector2(positionX, positionY);
                 }
-                // QUESTION: กรณีที่ block ปลายทางเรามีของวางอยู่จะไม่เสีย energy เหมือนที่เราเดินไปลง block ว่างๆ ใช่ไหม?
             }
             else
             {
+                mapGenerator.mapdata[positionX, positionY] = mapGenerator.empty;
                 positionX = toX;
                 positionY = toY;
-                transform.position = new Vector3(positionX, positionY, 0);
-                TakeDamage(1);
+                transform.position = new Vector2(positionX, positionY);
             }
-
         }
+
+
         // hasPlacement คืนค่า true ถ้ามีการวางอะไรไว้บน map ที่ตำแหน่ง x,y
         public bool HasPlacement(int x, int y)
         {
